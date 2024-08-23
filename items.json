@@ -1,5 +1,15 @@
 [
   {
+    "title": "Банки",
+    "category_id": "19fbff1b-8c17-46f1-95d6-bbb8d8ee03e0",
+    "location_id": "657a23cf-d209-4e5c-9740-53c9e5991b7f",
+    "name": "Айлана",
+    "description": "Стеклянные",
+    "date": "22.10.2023",
+    "image": null,
+    "id": "4cadab10-539b-403a-8e47-b8bff13abaaa"
+  },
+  {
     "title": "Клавиатура",
     "category_id": "19fbff1b-8c17-46f1-95d6-bbb8d8ee03e0",
     "location_id": "13a63c36-458a-483a-8af8-05a177aada1f",
@@ -10,13 +20,13 @@
     "id": "78ba6972-2bb0-4247-a895-5e324be1b4fd"
   },
   {
-    "title": "Банки",
+    "title": "Мышка",
     "category_id": "19fbff1b-8c17-46f1-95d6-bbb8d8ee03e0",
-    "location_id": "657a23cf-d209-4e5c-9740-53c9e5991b7f",
-    "name": "Айлана",
-    "description": "Стеклянные",
-    "date": "22.10.2023",
-    "image": null,
-    "id": "4cadab10-539b-403a-8e47-b8bff13abaaa"
+    "location_id": "13a63c36-458a-483a-8af8-05a177aada1f",
+    "name": "lg-144",
+    "description": "Logitech",
+    "date": "22.08.2024",
+    "image": "images/0de9109f-cbab-4f66-a4be-f1248f0133fc.png",
+    "id": "1cb557bb-414f-48d1-a619-383b0c694148"
   }
 ]
