@@ -1,7 +1,7 @@
 import express from 'express';
-import itemsDB from "../itemsDB";
 import {ItemMutation} from '../types';
 import {imagesUpload} from '../multer';
+import fileDB from '../fileDB';
 const itemsRouter = express.Router();
 
 itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
@@ -21,7 +21,7 @@ itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
     image: req.file ? req.file.filename : null,
   };
 
-  const createItem = await itemsDB.itemMutation(newItem);
+  const createItem = await fileDB.itemMutation(newItem);
 
   if (createItem !== null) {
     res.send(createItem);
@@ -31,7 +31,7 @@ itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
 });
 
 itemsRouter.get('/', async (req, res) => {
-  const items = await itemsDB.getItems();
+  const items = await fileDB.getItems();
   res.send(items.reverse());
 });
 
@@ -42,7 +42,7 @@ itemsRouter.get('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const item = await itemsDB.findItem(id);
+  const item = await fileDB.findItem(id);
 
   if (item) {
     res.send(item);
@@ -62,13 +62,13 @@ itemsRouter.put('/:id', async (req, res) => {
     return res.status(400).send({error: "ID cannot be changed"});
   }
 
-  const item = await itemsDB.findItem(id);
+  const item = await fileDB.findItem(id);
 
   if (!item) {
     return res.status(400).send({error: "Item not found"});
   }
 
-  const updatedItem = await itemsDB.editItem(req.body, id);
+  const updatedItem = await fileDB.editItem(req.body, id);
   res.send(updatedItem);
 });
 
@@ -79,13 +79,13 @@ itemsRouter.delete('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const item = await itemsDB.findItem(id);
+  const item = await fileDB.findItem(id);
 
   if (!item) {
     return res.status(400).send({error: "Item not found"});
   }
 
-  const result = await itemsDB.deleteItem(id);
+  const result = await fileDB.deleteItem(id);
   res.send(result);
 });
 

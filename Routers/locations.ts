@@ -1,6 +1,6 @@
 import express from 'express';
-import locationsDB from "../locationsDB";
 import {LocationMutation} from '../types';
+import fileDB from '../fileDB';
 
 const locationsRouter = express.Router();
 
@@ -16,12 +16,12 @@ locationsRouter.post('/', async (req, res) => {
     description: description,
   };
 
-  const createdLocation = await locationsDB.locationMutation(newLocation);
+  const createdLocation = await fileDB.locationMutation(newLocation);
   res.send(createdLocation);
 });
 
 locationsRouter.get('/', async (req, res) => {
-  const locations = await locationsDB.getLocations();
+  const locations = await fileDB.getLocations();
   res.send(locations.reverse());
 });
 
@@ -32,7 +32,7 @@ locationsRouter.get('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const location = await locationsDB.oneLocation(id);
+  const location = await fileDB.oneLocation(id);
 
   if (location) {
     res.send(location);
@@ -52,13 +52,13 @@ locationsRouter.put('/:id', async (req, res) => {
     return res.status(400).send({error: "ID cannot be changed"});
   }
 
-  const location = await locationsDB.oneLocation(id);
+  const location = await fileDB.oneLocation(id);
 
   if (!location) {
     return res.status(400).send({error: "Error getting location"});
   }
 
-  const updatedLocation = await locationsDB.editLocation(req.body, id);
+  const updatedLocation = await fileDB.editLocation(req.body, id);
   res.send(updatedLocation);
 });
 
@@ -69,13 +69,13 @@ locationsRouter.delete('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const location = await locationsDB.oneLocation(id);
+  const location = await fileDB.oneLocation(id);
 
   if (!location) {
     return res.status(400).send({error: "Location not found"});
   }
 
-  const result = await locationsDB.deleteLocation(id);
+  const result = await fileDB.deleteLocation(id);
   res.send({message: result});
 });
 

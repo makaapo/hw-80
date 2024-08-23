@@ -1,11 +1,12 @@
 import express from 'express';
-import categoriesDB from "../categoriesDB";
+
 import {CategoryMutation} from '../types';
+import fileDB from '../fileDB';
 
 const categoriesRouter = express.Router();
 
 categoriesRouter.get('/', async (req, res) => {
-  const categories = await categoriesDB.getCategories();
+  const categories = await fileDB.getCategories();
   res.send(categories.reverse());
 });
 
@@ -21,7 +22,7 @@ categoriesRouter.post('/', async (req, res) => {
     description: description,
   };
 
-  const createdCategory = await categoriesDB.categoryMutation(newCategory);
+  const createdCategory = await fileDB.categoryMutation(newCategory);
   res.send(createdCategory);
 });
 
@@ -32,7 +33,7 @@ categoriesRouter.get('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const category = await categoriesDB.oneCategory(id);
+  const category = await fileDB.oneCategory(id);
 
   if (category) {
     res.send(category);
@@ -52,13 +53,13 @@ categoriesRouter.put('/:id', async (req, res) => {
     return res.status(400).send({error: "ID cannot be changed"});
   }
 
-  const category = await categoriesDB.oneCategory(id);
+  const category = await fileDB.oneCategory(id);
 
   if (!category) {
     return res.status(404).send({error: "Category not found"});
   }
 
-  const updatedCategory = await categoriesDB.editCategory(req.body, id);
+  const updatedCategory = await fileDB.editCategory(req.body, id);
   res.send(updatedCategory);
 });
 
@@ -69,13 +70,13 @@ categoriesRouter.delete('/:id', async (req, res) => {
     return res.status(400).send({error: "ID required"});
   }
 
-  const category = await categoriesDB.oneCategory(id);
+  const category = await fileDB.oneCategory(id);
 
   if (!category) {
     return res.status(400).send({error: "Category not found"});
   }
 
-  const result = await categoriesDB.deleteCategory(id);
+  const result = await fileDB.deleteCategory(id);
   res.send(result);
 });
 
