@@ -11,6 +11,7 @@ const app = express();
 const port = 8000;
 
 app.use(express.json());
+app.use(express.static('public'));
 app.use('/categories', categoriesRouter);
 app.use('/locations', locationsRouter);
 app.use('/items', itemsRouter);

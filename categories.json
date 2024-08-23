@@ -1,1 +1,12 @@
-[{"description":"","id":"0ebadf9c-601f-41d9-a555-28c6e485a2be"},{"description":"","id":"e68182a8-9fbf-4d43-ae47-0519ce88c801"},{"title":"Привет!","description":"привет","id":"127638a9-d192-4b1c-b4b2-c74c292562bb"},{"title":"Привет!","description":"da","id":"127638a9-d192-4b1c-b4b2-c74c292562bb"},{"title":"Привет!","description":"da","id":"127638a9-d192-4b1c-b4b2-c74c292562bb"}]
+[
+  {
+    "title": "Компьютерные принадлежности",
+    "description": "Офисные",
+    "id": "19fbff1b-8c17-46f1-95d6-bbb8d8ee03e0"
+  },
+  {
+    "title": "Домашние предметы",
+    "description": "На балконе",
+    "id": "bf98caa8-f56c-4706-bfd0-b1a96ffa2660"
+  }
+]

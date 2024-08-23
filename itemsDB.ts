@@ -20,11 +20,12 @@ const itemsDb = {
   async getItems() {
     return data;
   },
+
   async itemMutation (item: ItemMutation) {
     const id = crypto.randomUUID();
     const newItem: Item = {...item, id}
 
-    let category = await CategoriesDB.categoryById(item.category_id);
+    let category = await CategoriesDB.oneCategory(item.category_id);
     let location = await LocationsDB.oneLocation(item.location_id);
 
     if (category !== null && location !== null) {
@@ -41,6 +42,17 @@ const itemsDb = {
     if (data.length > 0 && id) {
       return data.find(item => item.id === id) || null;
     }
+  },
+
+  async findItemWithCategoryOrLocation(id: string) {
+    if (!id) {
+      return false;
+    }
+
+    const itemByCategory = data.find(item => item.category_id === id);
+    const itemByLocation = data.find(item => item.location_id === id);
+
+    return !!(itemByCategory || itemByLocation);
   },
 
   async deleteItem(id: string) {

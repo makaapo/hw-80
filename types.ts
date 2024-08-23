@@ -24,13 +24,17 @@ export interface Item {
   title: string,
   category_id: string,
   location_id: string,
+  name: string,
   description: string,
+  date: string | null,
   image: string | null,
 }
 export interface ItemMutation {
   title: string,
   category_id: string,
   location_id: string,
+  name: string,
   description: string,
+  date: string,
   image: string | null,
 }

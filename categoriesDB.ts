@@ -1,6 +1,7 @@
 import {promises as fs} from 'fs';
 import crypto from 'crypto';
 import {Category, CategoryMutation} from './types';
+import itemsDB from './itemsDB';
 
 
 const fileName = './categories.json';
@@ -29,7 +30,7 @@ const categoriesDb = {
 
     return newCategory;
   },
-  async categoryById(id: string) {
+  async oneCategory(id: string) {
 
     if (data.length > 0 && id) {
       let category: Category | undefined = data.find(category => category.id === id);
@@ -43,9 +44,10 @@ const categoriesDb = {
   },
   async editCategory(categoryBody: Category, id: string) {
     if (data.length > 0 && id) {
-      let category = await this.categoryById(id);
+      let category = await this.oneCategory(id);
       if (category) {
         category = {...category, ...categoryBody};
+        await this.deleteCategory(id);
         data.push(category);
         await this.save();
 
@@ -55,6 +57,26 @@ const categoriesDb = {
       }
     }
   },
+
+  async deleteCategory(id: string) {
+    if (data.length > 0 && id) {
+      let category = await this.oneCategory(id);
+      let itemWithCategory = await itemsDB.findItemWithCategoryOrLocation(id);
+
+      if (category === null) {
+        return 'This category was not found';
+      }
+
+      if (category && !itemWithCategory) {
+        data = data.filter(category => category.id !== id);
+        await this.save();
+        return 'Category was deleted';
+      } else if (category && itemWithCategory) {
+        return 'The item has this category ID, first remove the item with this category ID.';
+      }
+    }
+  },
+
   async save() {
     return fs.writeFile(fileName, JSON.stringify(data, null, 2));
   },

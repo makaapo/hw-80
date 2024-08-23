@@ -1,6 +1,7 @@
 import {promises as fs} from 'fs';
 import crypto from 'crypto';
 import {LocationMutation, Location} from './types';
+import itemsDB from './itemsDB';
 
 
 const fileName = './locations.json';
@@ -51,13 +52,33 @@ const locationsDB = {
         location = {...location, ...inLocation};
         data.push(location);
         await this.save();
-
+        await this.deleteLocation(id);
         return location;
       } else {
         return 'Location not found';
       }
     }
   },
+  async deleteLocation(id: string) {
+    if (data.length > 0 && id) {
+      let location = await this.oneLocation(id);
+      let itemWithLocation = await itemsDB.findItemWithCategoryOrLocation(id);
+
+      if (location === null) {
+        return 'This location was not found';
+      }
+
+      if (location && !itemWithLocation) {
+        data = data.filter(location => location.id !== id);
+        await this.save();
+        return 'Location deleted';
+      } else if (location && itemWithLocation) {
+        return 'The item has this location ID, first remove the item with this location ID.';
+      }
+    }
+  },
+
+
   async save() {
     return fs.writeFile(fileName, JSON.stringify(data, null, 2));
   },

@@ -1,8 +1,7 @@
 import express from 'express';
 import itemsDB from "../itemsDB";
-import {imagesUpload} from "../multer";
 import {ItemMutation} from '../types';
-
+import {imagesUpload} from '../multer';
 const itemsRouter = express.Router();
 
 itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
@@ -16,7 +15,9 @@ itemsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
     title: req.body.title,
     category_id: req.body.category_id,
     location_id: req.body.location_id,
+    name: req.body.name,
     description: description,
+    date: req.body.date,
     image: req.file ? req.file.filename : null,
   };
 
@@ -35,7 +36,7 @@ itemsRouter.get('/', async (req, res) => {
 });
 
 itemsRouter.get('/:id', async (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
 
   if (!id) {
     return res.status(400).send({error: "ID required"});

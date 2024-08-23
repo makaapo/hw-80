@@ -62,4 +62,21 @@ locationsRouter.put('/:id', async (req, res) => {
   res.send(updatedLocation);
 });
 
+locationsRouter.delete('/:id', async (req, res) => {
+  const {id} = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
+  }
+
+  const location = await locationsDB.oneLocation(id);
+
+  if (!location) {
+    return res.status(400).send({error: "Location not found"});
+  }
+
+  const result = await locationsDB.deleteLocation(id);
+  res.send({message: result});
+});
+
 export default locationsRouter;

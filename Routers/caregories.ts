@@ -1,63 +1,82 @@
-import {Router} from 'express';
+import express from 'express';
 import categoriesDB from "../categoriesDB";
-import {Category, CategoryMutation} from '../types';
-const categoriesRouter = Router();
+import {CategoryMutation} from '../types';
+
+const categoriesRouter = express.Router();
 
 categoriesRouter.get('/', async (req, res) => {
-  let category: Category[];
-
-  category = await categoriesDB.getCategories();
-  category = category.reverse();
-  res.send(category);
+  const categories = await categoriesDB.getCategories();
+  res.send(categories.reverse());
 });
 
 categoriesRouter.post('/', async (req, res) => {
   if (!req.body.title) {
-    res.status(404).send({error: "Title the request"});
+    return res.status(400).send({error: "Title required"});
   }
 
-  let description = req.body.description ? req.body.description : '';
+  const description = req.body.description || '';
 
-  let newCategory: CategoryMutation = {
+  const newCategory: CategoryMutation = {
     title: req.body.title,
     description: description,
   };
 
-  newCategory = await categoriesDB.categoryMutation(newCategory);
-  res.send(newCategory);
+  const createdCategory = await categoriesDB.categoryMutation(newCategory);
+  res.send(createdCategory);
 });
 
-
 categoriesRouter.get('/:id', async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).send({error: "Error when requesting by ID"});
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
   }
 
-  let category = await categoriesDB.categoryById(req.params.id);
+  const category = await categoriesDB.oneCategory(id);
 
   if (category) {
     res.send(category);
   } else {
-    res.send('This category not found');
+    res.status(404).send({error: "Category not found"});
   }
 });
 
 categoriesRouter.put('/:id', async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).send({error: "Editing error"});
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
   }
 
   if (req.body.id) {
-    res.status(400).send({error: "ID cannot change"});
+    return res.status(400).send({error: "ID cannot be changed"});
   }
 
-  if (req.body.title || req.body.description) {
-    let category = await categoriesDB.editCategory(req.body, req.params.id);
-    res.send(category);
-  } else {
-    res.status(400).send({error: "There can only be a title and description"});
+  const category = await categoriesDB.oneCategory(id);
+
+  if (!category) {
+    return res.status(404).send({error: "Category not found"});
   }
+
+  const updatedCategory = await categoriesDB.editCategory(req.body, id);
+  res.send(updatedCategory);
 });
 
+categoriesRouter.delete('/:id', async (req, res) => {
+  const {id} = req.params;
 
-export default categoriesRouter
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
+  }
+
+  const category = await categoriesDB.oneCategory(id);
+
+  if (!category) {
+    return res.status(400).send({error: "Category not found"});
+  }
+
+  const result = await categoriesDB.deleteCategory(id);
+  res.send(result);
+});
+
+export default categoriesRouter;
