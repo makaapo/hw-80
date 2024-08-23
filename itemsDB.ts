@@ -37,6 +37,42 @@ const itemsDb = {
     }
   },
 
+  async findItem(id: string) {
+    if (data.length > 0 && id) {
+      return data.find(item => item.id === id) || null;
+    }
+  },
+
+  async deleteItem(id: string) {
+    if (data.length > 0 && id) {
+      let item = await this.findItem(id);
+
+      if (item) {
+        data = data.filter(item => item.id !== id);
+        await this.save();
+        return 'Item deleted';
+      } else {
+        return 'Item is not found';
+      }
+    }
+  },
+  async editItem(items: Item, id: string) {
+    if (data.length > 0 && id) {
+      let item = await this.findItem(id);
+
+      if (item) {
+        item = {...item, ...items};
+        await this.deleteItem(id);
+        data.push(item);
+        await this.save();
+
+        return item;
+      } else {
+        return 'Item is not found';
+      }
+    }
+  },
+
   async save() {
     return fs.writeFile(fileName, JSON.stringify(data, null, 2));
   },

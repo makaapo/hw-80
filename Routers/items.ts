@@ -34,4 +34,58 @@ itemsRouter.get('/', async (req, res) => {
   res.send(items.reverse());
 });
 
+itemsRouter.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
+  }
+
+  const item = await itemsDB.findItem(id);
+
+  if (item) {
+    res.send(item);
+  } else {
+    res.status(400).send({error: "Item not found"});
+  }
+});
+
+itemsRouter.put('/:id', async (req, res) => {
+  const {id} = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
+  }
+
+  if (req.body.id) {
+    return res.status(400).send({error: "ID cannot be changed"});
+  }
+
+  const item = await itemsDB.findItem(id);
+
+  if (!item) {
+    return res.status(400).send({error: "Item not found"});
+  }
+
+  const updatedItem = await itemsDB.editItem(req.body, id);
+  res.send(updatedItem);
+});
+
+itemsRouter.delete('/:id', async (req, res) => {
+  const {id } = req.params;
+
+  if (!id) {
+    return res.status(400).send({error: "ID required"});
+  }
+
+  const item = await itemsDB.findItem(id);
+
+  if (!item) {
+    return res.status(400).send({error: "Item not found"});
+  }
+
+  const result = await itemsDB.deleteItem(id);
+  res.send(result);
+});
+
 export default itemsRouter;
